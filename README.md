@@ -1,42 +1,51 @@
-Erlang driver for syslog
-------------------------
+# Erlang driver for syslog
 
-This is an erlang port driver for interacting with syslog.
+[![Build Status][Travis badge]][Travis link]
 
-Installing it
--------------
+[Travis badge]: https://travis-ci.org/yurrriq/erlang-syslog.svg?branch=master
+[Travis link]: https://travis-ci.org/yurrriq/erlang-syslog
 
-    ./rebar compile
-    sudo ./rebar install
+This is an Erlang port driver for interacting with syslog.
 
-Trying it
----------
+## Building
 
-You should have a look at syslog.h.
+```fish
+rebar3 compile
+```
 
-In another shell :
 
-    $ tail -f /var/log/syslog
+## Usage
 
-Or, for mac users :
+You should have a look at `syslog.h`.
 
-    $ tail -f /var/log/system.log
+In another shell:
 
-In erlang shell :
+```fish
+tail -f /var/log/syslog
+```
 
-    $ erl
-    > syslog:start().
-    > {ok,Log} = syslog:open("Beuha", [cons, perror, pid], local0).
-    > syslog:log(Log, err, "Damned").
-    > syslog:log(Log, info, "process count: ~w", [length(processes())]).
+Or, for mac users:
 
-API
----
+```fish
+tail -f /var/log/system.log
+```
+
+In an Erlang shell:
+
+```erlang
+> syslog:start().
+> {ok,Log} = syslog:open("Beuha", [cons, perror, pid], local0).
+> syslog:log(Log, err, "Damned").
+> syslog:log(Log, info, "process count: ~w", [length(processes())]).
+```
+
+
+## API
 
 ### syslog:open(Ident, Logopt, Facility) -> {ok, port()} ###
 
-_Ident_ is an arbitrary string  
-_Logopt_ is an atom or array of atom, you can use a number if you're brave enough :
+_Ident_ is an arbitrary string
+_Logopt_ is an atom or array of atom, you can use a number if you're brave enough:
 
  * pid
  * cons
@@ -44,7 +53,7 @@ _Logopt_ is an atom or array of atom, you can use a number if you're brave enoug
  * ndelay
  * perror
 
-_Facility_ is an atom :
+_Facility_ is an atom:
 
  * kern
  * user
@@ -77,8 +86,8 @@ that can be passed to subsequent `log` and `close` calls, or it will throw
 
 ### syslog:log(Log, Priority, Message) -> ok ###
 
-_Log_ is a syslog handle returned from `open`  
-_Priority_ can be a number or better, an atom :
+_Log_ is a syslog handle returned from `open`
+_Priority_ can be a number or better, an atom:
 
  * emerg
  * alert
@@ -102,7 +111,7 @@ formatted.
 
 _Log_ is a syslog handle returned from `open`
 
-BUGS
-----
+
+## BUGS
 
  * None known
