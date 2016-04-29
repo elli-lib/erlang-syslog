@@ -42,75 +42,37 @@ In an Erlang shell:
 
 ## API
 
-### syslog:open(Ident, Logopt, Facility) -> {ok, port()} ###
+```erlang
+-type openlog_opt() :: pid | cons | odelay | ndelay | perror | pos_integer().
 
-_Ident_ is an arbitrary string
-_Logopt_ is an atom or array of atom, you can use a number if you're brave enough:
+-type facility() :: kern    | user       | mail     | daemon
+                  | auth    | syslog     | lpr      | news
+                  | uucp    | cron       | authpriv | ftp
+                  | netinfo | remoteauth | install  | ras
+                  | local0  | local1     | local2   | local3
+                  | local4  | local5     | local6   | local7
+                  | non_neg_integer().
 
- * pid
- * cons
- * odelay
- * ndelay
- * perror
+-type priority() :: emerg   | alert  | crit | err
+                  | warning | notice | info | debug
+                  | non_neg_integer().
 
-_Facility_ is an atom:
+-spec open(Ident, LogOpt, Facility) -> {ok, Log} |  {error, any()} when
+      Ident    :: string(),
+      LogOpt   :: openlog_opt() | [openlog_opt()],
+      Facility :: facility(),
+      Log      :: port().
 
- * kern
- * user
- * mail
- * daemon
- * auth
- * syslog
- * lpr
- * news
- * uucp
- * cron
- * authpriv
- * ftp
- * netinfo
- * remoteauth
- * install
- * ras
- * local0
- * local1
- * local2
- * local3
- * local4
- * local5
- * local6
- * local7
+-spec log(Log :: port(), Priority :: priority(), Message :: iolist()) -> ok.
 
-The `open` call returns either `{ok, Log}` where _Log_ is a syslog handle
-that can be passed to subsequent `log` and `close` calls, or it will throw
-{error, badarg}.
+-spec log(Log, Priority, Format, Data) -> ok when
+      Log      :: port(),
+      Priority :: priority(),
+      Format   :: io:format(),
+      Data     :: [term()].
 
-### syslog:log(Log, Priority, Message) -> ok ###
-
-_Log_ is a syslog handle returned from `open`
-_Priority_ can be a number or better, an atom:
-
- * emerg
- * alert
- * crit
- * err
- * warning
- * notice
- * info
- * debug
-
-_Message_ is a string.
-
-### syslog:log(Log, Priority, FormatMsg, FormatArgs) -> ok ###
-
-Same as above, but allows for the construction of log messages similar to
-formatting strings via `io_lib:format/2`, where _FormatMsg_ indicates the
-formatting instructions and _FormatArgs_ is a list of arguments to be
-formatted.
-
-### syslog:close(Log) -> ok ###
-
-_Log_ is a syslog handle returned from `open`
-
+-spec close(Log :: port()) -> ok.
+```
 
 ## BUGS
 

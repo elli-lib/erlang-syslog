@@ -94,11 +94,11 @@ start_link() ->
 stop() ->
     gen_server:cast(?MODULE, stop).
 
--spec open(Ident :: string(),
-           Logopt :: list(openlog_opt()),
-           Facility :: facility()) ->
-    {ok, port()} |
-    {error, any()}.
+-spec open(Ident, LogOpt, Facility) -> {ok, Log} |  {error, any()} when
+      Ident    :: string(),
+      LogOpt   :: openlog_opt() | [openlog_opt()],
+      Facility :: facility(),
+      Log      :: port().
 
 open(Ident, Logopt, Facility) ->
     Log = erlang:open_port({spawn, ?DRV_NAME}, [binary]),
@@ -113,10 +113,7 @@ open(Ident, Logopt, Facility) ->
             {error, Reason}
     end.
 
--spec log(Log :: port(),
-          Priority :: priority(),
-          Message :: iolist()) ->
-    ok.
+-spec log(Log :: port(), Priority :: priority(), Message :: iolist()) -> ok.
 
 log(_Log, _Priority, []) ->
     ok;
@@ -127,17 +124,16 @@ log(Log, Priority, Message) ->
     true = erlang:port_command(Log, [<<NumPri:32/big>>, Message, <<0:8>>]),
     ok.
 
--spec log(Log :: port(),
-          Priority :: priority(),
-          FormatStr :: string(),
-          FormatArgs :: list()) ->
-    ok.
+-spec log(Log, Priority, Format, Data) -> ok when
+      Log      :: port(),
+      Priority :: priority(),
+      Format   :: io:format(),
+      Data     :: [term()].
 
-log(Log, Priority, FormatStr, FormatArgs) ->
-    log(Log, Priority, io_lib:format(FormatStr, FormatArgs)).
+log(Log, Priority, Format, Data) ->
+    log(Log, Priority, io_lib:format(Format, Data)).
 
--spec close(Log :: port()) ->
-    ok.
+-spec close(Log :: port()) -> ok.
 
 close(Log) ->
     true = erlang:port_close(Log),
