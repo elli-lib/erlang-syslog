@@ -2,8 +2,8 @@
 
 [![Build Status][Travis badge]][Travis link]
 
-[Travis badge]: https://travis-ci.org/yurrriq/erlang-syslog.svg?branch=master
-[Travis link]: https://travis-ci.org/yurrriq/erlang-syslog
+[Travis badge]: https://travis-ci.org/elli-lib/erlang-syslog.svg?branch=master
+[Travis link]: https://travis-ci.org/elli-lib/erlang-syslog
 
 This is an Erlang port driver for interacting with syslog.
 
